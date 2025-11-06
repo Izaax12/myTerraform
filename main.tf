@@ -1,3 +1,6 @@
+#### Para esta parte, se estara creando una instancia EC2, con gninx, security groups
+#### y tags
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -6,4 +9,57 @@ resource "aws_instance" "name" {
     # Amazon image
     ami = "ami-0440d3b780d96b29d"
     instance_type = "t3.micro"
+
+    # Script para instalar nginx
+    user_data = <<-EOF
+                #!/bin/bash
+                sudo yum install -y nginx
+                sudo systemctl enable nginx
+                sudo systemctl start nginx
+                EOF
+    # Pasamos el valor de la llave ssh
+    key_name = aws_key_pair.nginx-server-ssh.key_name
+
+    # Asignamos SG
+    vpc_security_group_ids = [
+        aws_security_group.nginx-server-sg.id
+    ]
 }   
+
+# Creamos un  ssh key
+resource "aws_key_pair" "nginx-server-ssh"{
+    key_name = "nginx-server-ssh"
+    # Donde esta el archivo 
+    public_key = file("nginx-server.key.pub")
+}
+
+# SG
+resource "aws_security_group" "nginx-server-sg" {
+    name = "nginx-sever-sg"
+    description = "Security group to allow HTTP traffic and SSH"
+
+
+    # Habilitamos puertos
+    ingress{
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress{
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    egress{
+        # al poner el 0n significa que acepta todos los puertos
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+}
