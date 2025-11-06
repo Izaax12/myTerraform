@@ -24,6 +24,14 @@ resource "aws_instance" "name" {
     vpc_security_group_ids = [
         aws_security_group.nginx-server-sg.id
     ]
+
+    tags = {
+        Name = "nginx-server"
+        Environment = "test"
+        Owner = "cosmic geralt"
+        Team = "Devops"
+        Project = "mine"
+    }
 }   
 
 # Creamos un  ssh key
@@ -31,6 +39,14 @@ resource "aws_key_pair" "nginx-server-ssh"{
     key_name = "nginx-server-ssh"
     # Donde esta el archivo 
     public_key = file("nginx-server.key.pub")
+
+    tags = {
+        Name = "nginx-server-ssh"
+        Environment = "test"
+        Owner = "cosmic geralt"
+        Team = "Devops"
+        Project = "mine"
+    }
 }
 
 # SG
@@ -60,6 +76,14 @@ resource "aws_security_group" "nginx-server-sg" {
         to_port = 0
         protocol = "-1"
         cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = {
+        Name = "nginx-server-sg"
+        Environment = "test"
+        Owner = "cosmic geralt"
+        Team = "Devops"
+        Project = "mine"
     }
 
 }
