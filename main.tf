@@ -35,6 +35,8 @@ resource "aws_instance" "name" {
 }   
 
 # Creamos un  ssh key
+# ssh-keygen -t rsa -b 2048 -f "nginx-server.key"
+# ssh user@ip -i priv_key
 resource "aws_key_pair" "nginx-server-ssh"{
     key_name = "nginx-server-ssh"
     # Donde esta el archivo 
@@ -86,4 +88,16 @@ resource "aws_security_group" "nginx-server-sg" {
         Project = "mine"
     }
 
+}
+
+########### outputs ##############
+
+output "server_public_ip" {
+    description = "Direccion IP publica de la instancia EC2"
+    value = aws_instance.nginx-server.public_ip
+}
+
+output "server_public_dns" {
+    description = "DNS publico de la instancia EC2"
+    value = aws_instance.nginx-server.ublic_dns
 }
