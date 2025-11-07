@@ -1,0 +1,17 @@
+# Terraform local directories and state
+.terraform/
+.terraform.lock.hcl # Consider committing this file if working in a team
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+.terraformrc
+terraform.rc
+
+# Sensitive variable files
+*.tfvars
+*.tfvars.json
+
+# Terraform plan files
+*.tfplan
