@@ -15,3 +15,6 @@ terraform.rc
 
 # Terraform plan files
 *.tfplan
+
+*.key
+*.key.pub
